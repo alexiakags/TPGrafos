@@ -314,6 +314,21 @@ class Grafo:
                     for origem, destino, peso in mst:
                         print(f"Aresta {origem} -> {destino} com peso {peso}")
                     print(f"Custo total da MST: {custo_total}")
+                    # Salvando o resultado em arquivo no mesmo formato de entrada
+                    nome_arquivo = "mst_resultado.txt"
+                    with open(nome_arquivo, "w") as arquivo:
+                        # Escreve o número de vértices
+                        arquivo.write(f"{self.num_vertices}\n")
+
+                        # Escreve as arestas da árvore geradora mínima (MST) no novo formato
+                        for origem, destino, peso in mst:
+                            arquivo.write(f"{origem} {destino} {peso:.1f}\n")
+
+                        # Escreve o peso total da MST no arquivo
+                        arquivo.write(f"Peso total: {custo_total:.1f}")
+
+                    print(f"A árvore geradora mínima foi salva em '{nome_arquivo}'.")
+
             elif opcao == "0":
                 print("Saindo do programa...")
                 break
