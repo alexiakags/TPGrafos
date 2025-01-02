@@ -265,6 +265,7 @@ class Grafo:
             print("8. Determinar componentes conexas")
             print("9. Verificar se o grafo possui ciclo")
             print("10. Determinar distância e caminho mínimo")
+            print("11. Executar Algoritmo de Prim")
             print("0. Sair")
             print("="*40)
             opcao = input("Escolha uma opção: ")
@@ -304,8 +305,55 @@ class Grafo:
                 if(self.bellman_ford(origem)):
                     result = self.imprimir_caminhos(origem)
                     print(result)
+            elif opcao == "11":
+                inicio = int(input("Digite o vértice inicial para o Algoritmo de Prim: "))
+                resultado = self.prim(inicio)
+                if resultado:
+                    mst, custo_total = resultado
+                    print("Árvore Geradora Mínima (MST):")
+                    for origem, destino, peso in mst:
+                        print(f"Aresta {origem} -> {destino} com peso {peso}")
+                    print(f"Custo total da MST: {custo_total}")
             elif opcao == "0":
                 print("Saindo do programa...")
                 break
             else:
                 print("Opção inválida! Tente novamente.")
+
+    def prim(self, inicio=1):
+        import heapq
+
+        inicio -= 1  # Ajusta para índice baseado em 0
+        visitados = [False] * self.num_vertices
+        heap = []  # Min-heap para selecionar arestas de menor peso
+        mst = []   # Lista para armazenar as arestas da MST
+        custo_total = 0  # Custo total da MST
+
+        # Adiciona todas as arestas do vértice inicial ao heap
+        visitados[inicio] = True
+        for destino in range(self.num_vertices):
+            peso = self.matriz_adj[inicio][destino]
+            if peso != 0:
+                heapq.heappush(heap, (peso, inicio, destino))
+
+        # Enquanto o heap não estiver vazio e a MST não estiver completa
+        while heap and len(mst) < self.num_vertices - 1:
+            peso, origem, destino = heapq.heappop(heap)
+            if not visitados[destino]:
+                # Adiciona a aresta à MST
+                mst.append((origem + 1, destino + 1, peso))  # Ajusta para índice 1
+                custo_total += peso
+                visitados[destino] = True
+
+                # Adiciona as novas arestas do vértice destino ao heap
+                for prox in range(self.num_vertices):
+                    prox_peso = self.matriz_adj[destino][prox]
+                    if prox_peso != 0 and not visitados[prox]:
+                        heapq.heappush(heap, (prox_peso, destino, prox))
+
+        # Verifica se todos os vértices foram visitados
+        if len(mst) != self.num_vertices - 1:
+            print("O grafo não é conectado, não foi possível formar uma MST.")
+            return None
+
+        return mst, custo_total
