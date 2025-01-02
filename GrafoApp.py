@@ -206,7 +206,7 @@ class GrafoApp:
                     arquivo.write(f"Peso total: {custo_total:.1f}")
 
                 # Exibe mensagem de sucesso para o usuário
-                self.exibir_resultado(f"A árvore geradora mínima foi salva em '{nome_arquivo}'.")
+                self.exibir_resultado(f"{texto_resultado}\nA árvore geradora mínima foi salva em '{nome_arquivo}'.")
 
             else:
                 self.exibir_resultado("Não foi possível calcular a MST. Verifique o grafo.")
