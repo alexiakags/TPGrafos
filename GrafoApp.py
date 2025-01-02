@@ -190,7 +190,6 @@ class GrafoApp:
                 for origem, destino, peso in mst:
                     texto_resultado += f"Aresta {origem} -> {destino} com peso {peso}\n"
                 texto_resultado += f"Custo total da MST: {custo_total}"
-                self.exibir_resultado(texto_resultado)
 
                 # Salvando o resultado no arquivo no mesmo formato de entrada
                 nome_arquivo = "mst_resultado.txt"
