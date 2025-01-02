@@ -1,0 +1,2 @@
+#Executando o arquivo "main.py" a pasta __pycache__ é criada, então é necessário ignorar ela no github (pra não dar problema de conflito).
+/__pycache__/
