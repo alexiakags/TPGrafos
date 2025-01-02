@@ -185,11 +185,29 @@ class GrafoApp:
             resultado = self.grafo.prim(inicio)  # Chama o método Prim no grafo
             if resultado:
                 mst, custo_total = resultado
+                # Formato a exibir para o usuário
                 texto_resultado = "Árvore Geradora Mínima (MST):\n"
                 for origem, destino, peso in mst:
                     texto_resultado += f"Aresta {origem} -> {destino} com peso {peso}\n"
                 texto_resultado += f"Custo total da MST: {custo_total}"
                 self.exibir_resultado(texto_resultado)
+
+                # Salvando o resultado no arquivo no mesmo formato de entrada
+                nome_arquivo = "mst_resultado.txt"
+                with open(nome_arquivo, "w") as arquivo:
+                    # Escreve o número de vértices
+                    arquivo.write(f"{self.grafo.num_vertices}\n")
+
+                    # Escreve as arestas da árvore geradora mínima (MST) no novo formato
+                    for origem, destino, peso in mst:
+                        arquivo.write(f"{origem} {destino} {peso:.1f}\n")
+
+                    # Escreve o peso total da MST no arquivo
+                    arquivo.write(f"Peso total: {custo_total:.1f}")
+
+                # Exibe mensagem de sucesso para o usuário
+                self.exibir_resultado(f"A árvore geradora mínima foi salva em '{nome_arquivo}'.")
+
             else:
                 self.exibir_resultado("Não foi possível calcular a MST. Verifique o grafo.")
         except ValueError:
