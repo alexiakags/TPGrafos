@@ -40,6 +40,7 @@ class GrafoApp:
             ("Componentes conexas", self.componentes_conexas),
             ("Detectar ciclo", self.detectar_ciclo),
             ("Distância e Caminho Mínimo", self.caminho_minimo),
+            ("Executar Algoritmo de Prim", self.prim),
             ("Sair", self.sair)
         ]
 
@@ -175,6 +176,26 @@ class GrafoApp:
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular caminhos mínimos: {str(e)}")
 
+    def prim(self):
+        self.instruction_label.config(text="Digite o vértice inicial para o Algoritmo de Prim:")
+        self.input_action = self._executar_prim   
+    def _executar_prim(self, inicio):
+        try:
+            inicio = int(inicio)  # Converte a entrada para inteiro
+            resultado = self.grafo.prim(inicio)  # Chama o método Prim no grafo
+            if resultado:
+                mst, custo_total = resultado
+                texto_resultado = "Árvore Geradora Mínima (MST):\n"
+                for origem, destino, peso in mst:
+                    texto_resultado += f"Aresta {origem} -> {destino} com peso {peso}\n"
+                texto_resultado += f"Custo total da MST: {custo_total}"
+                self.exibir_resultado(texto_resultado)
+            else:
+                self.exibir_resultado("Não foi possível calcular a MST. Verifique o grafo.")
+        except ValueError:
+            self.exibir_resultado("Erro: O vértice inicial deve ser um número inteiro.")
+        except Exception as e:
+            self.exibir_resultado(f"Erro ao calcular a árvore geradora mínima: {str(e)}")
 
     def sair(self):
         self.master.destroy()
