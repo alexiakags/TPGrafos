@@ -248,8 +248,6 @@ class Grafo:
         # retorna o número de componentes conexas
         return componentes
 
-
-
     def menu(self):
         while True:
             print("\n" + "="*40)
@@ -266,6 +264,7 @@ class Grafo:
             print("9. Verificar se o grafo possui ciclo")
             print("10. Determinar distância e caminho mínimo")
             print("11. Executar Algoritmo de Prim")
+            print("12. Cobertura Mínima de Vértices")
             print("0. Sair")
             print("="*40)
             opcao = input("Escolha uma opção: ")
@@ -328,6 +327,9 @@ class Grafo:
                         arquivo.write(f"Peso total: {custo_total:.1f}")
 
                     print(f"A árvore geradora mínima foi salva em '{nome_arquivo}'.")
+            elif opcao == "12":
+                cobertura = self.cobertura_minima_vertices()
+                print(f"Cobertura Mínima de Vértices: {cobertura}")
 
             elif opcao == "0":
                 print("Saindo do programa...")
@@ -372,3 +374,32 @@ class Grafo:
             return None
 
         return mst, custo_total
+
+    def cobertura_minima_vertices(self):
+            arestas_restantes = set()  # conjunto de todas as arestas do grafo
+            for i in range(self.num_vertices):
+                for j in range(i + 1, self.num_vertices):  # para nao repetir aresta
+                    if self.matriz_adj[i][j] != 0:
+                        arestas_restantes.add((i, j))
+            
+            cobertura = set()  # conjunto de vértices na cobertura
+            graus = [sum(1 for u in range(self.num_vertices) if self.matriz_adj[v][u] != 0) for v in range(self.num_vertices)]
+            
+            while arestas_restantes:
+                # o vértice com maior grau
+                vertice = max(range(self.num_vertices), key=lambda v: graus[v])
+
+                # adiciona o vértice à cobertura
+                cobertura.add(vertice)
+
+                # remove todas as arestas incidentes a esse vértice e atualiza os graus
+                novas_arestas = set()
+                for u, v in arestas_restantes:
+                    if u == vertice or v == vertice:
+                        graus[u] -= 1
+                        graus[v] -= 1
+                    else:
+                        novas_arestas.add((u, v))
+                arestas_restantes = novas_arestas
+
+            return [v + 1 for v in cobertura]  # retorna os vértices 1-indexados
