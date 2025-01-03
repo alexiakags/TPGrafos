@@ -41,6 +41,7 @@ class GrafoApp:
             ("Detectar ciclo", self.detectar_ciclo),
             ("Distância e Caminho Mínimo", self.caminho_minimo),
             ("Executar Algoritmo de Prim", self.prim),
+            ("Cobertura Mínima de Vértices", self.cobertura_minima_vertices),
             ("Sair", self.sair)
         ]
 
@@ -214,6 +215,10 @@ class GrafoApp:
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular a árvore geradora mínima: {str(e)}")
 
+    def cobertura_minima_vertices(self):
+        cobertura = self.grafo.cobertura_minima_vertices()
+        self.exibir_resultado(f"Cobertura Mínima de Vértices: {cobertura}")
+
     def sair(self):
         self.master.destroy()
         sys.exit()
@@ -274,5 +279,3 @@ class GrafoApp:
             messagebox.showerror("Erro", "Arquivo não encontrado. Encerrando o programa.")
         except Exception as e:
             messagebox.showerror("Erro", f"Ocorreu um erro: {str(e)}")
-
-
