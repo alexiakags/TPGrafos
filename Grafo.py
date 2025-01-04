@@ -372,3 +372,25 @@ class Grafo:
             return None
 
         return mst, custo_total
+
+    def emparelhamentoMaxEdmonds(self):
+        
+        def dfs(v):
+            visitados.add(v)
+            for u in self.obter_vizinhos(v):
+                if u not in visitados:
+                    visitados.add(u)
+                    if u not in pares or dfs(pares[u]):
+                        pares[u] = v
+                        return True
+            return False
+
+        pares = {}
+        max_emparelhamento = 0
+        for v in range(self.num_vertices):
+            visitados = set()
+            if dfs(v):
+                max_emparelhamento += 1
+
+        emparelhamento = [(u, pares[u]) for u in pares]
+        return emparelhamento, max_emparelhamento
