@@ -372,3 +372,77 @@ class Grafo:
             return None
 
         return mst, custo_total
+
+    def emparelhamento_maximo_edmonds(self):
+        pares = [-1] * self.num_vertices  # Array para armazenar pares de emparelhamento
+        base = list(range(self.num_vertices))  # Base de cada vértice
+        pai = [-1] * self.num_vertices  # Pai no caminho aumentante
+        visitado = [False] * self.num_vertices  # Visitado no BFS
+
+        def lca(v, u):
+            """Encontra o menor ancestral comum (Lowest Common Ancestor)."""
+            marcados = [False] * self.num_vertices
+            while True:
+                v = base[v]
+                marcados[v] = True
+                if pares[v] == -1:
+                    break
+                v = pai[pares[v]]
+
+            while True:
+                u = base[u]
+                if marcados[u]:
+                    return u
+                u = pai[pares[u]]
+
+        def contrair(v, u, anc):
+            """Contrai o blossom no grafo."""
+            while base[v] != anc:
+                pai[v] = u
+                u = pares[v]
+                if base[u] != anc:
+                    base[u] = anc
+                v = pai[u]
+
+        def bfs(origem):
+            """Busca em largura para encontrar caminhos aumentantes."""
+            for i in range(self.num_vertices):
+                pai[i] = -1
+                base[i] = i
+                visitado[i] = False
+
+            fila = [origem]
+            visitado[origem] = True
+
+            while fila:
+                v = fila.pop(0)
+                for u in self.adj[v]:
+                    if base[v] == base[u] or (pares[v] != -1 and pares[v] == u):
+                        continue
+
+                    if u == origem or (pares[u] != -1 and pai[pares[u]] != -1):
+                        anc = lca(v, u)
+                        contrair(v, u, anc)
+                        contrair(u, v, anc)
+                    elif pai[u] == -1:
+                        pai[u] = v
+                        if pares[u] == -1:
+                            while u != -1:
+                                v = pai[u]
+                                prox = pares[v]
+                                pares[v] = u
+                                pares[u] = v
+                                u = prox
+                            return True
+                        u = pares[u]
+                        visitado[u] = True
+                        fila.append(u)
+
+            return False
+
+        emparelhamento_maximo = 0
+        for v in range(self.num_vertices):
+            if pares[v] == -1 and bfs(v):
+                emparelhamento_maximo += 1
+
+        return emparelhamento_maximo, [(u, pares[u]) for u in range(self.num_vertices) if pares[u] > u]
