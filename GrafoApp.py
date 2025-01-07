@@ -41,6 +41,7 @@ class GrafoApp:
             ("Detectar ciclo", self.detectar_ciclo),
             ("Distância e Caminho Mínimo", self.caminho_minimo),
             ("Executar Algoritmo de Prim", self.prim),
+            ("Centralidade de Proximidade", self.centralidade_proximidade),	
             ("Sair", self.sair)
         ]
 
@@ -214,6 +215,20 @@ class GrafoApp:
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular a árvore geradora mínima: {str(e)}")
 
+    def centralidade_proximidade(self):
+        self.instruction_label.config(text="Digite o vértice para calcular a centralidade de proximidade:")
+        self.input_action = self._calcular_centralidade_proximidade
+
+    def _calcular_centralidade_proximidade(self, vertice):
+        try:
+            vertice = int(vertice)  # Converte a entrada para inteiro
+            centralidade = self.grafo.centralidade_proximidade(vertice)
+            self.exibir_resultado(f"Centralidade de proximidade do vértice {vertice}: {centralidade:.4f}")
+        except ValueError:
+            self.exibir_resultado("Erro: O vértice deve ser um número inteiro.")
+        except Exception as e:
+            self.exibir_resultado(f"Erro ao calcular a centralidade de proximidade: {str(e)}")
+
     def sair(self):
         self.master.destroy()
         sys.exit()
@@ -274,5 +289,3 @@ class GrafoApp:
             messagebox.showerror("Erro", "Arquivo não encontrado. Encerrando o programa.")
         except Exception as e:
             messagebox.showerror("Erro", f"Ocorreu um erro: {str(e)}")
-
-
