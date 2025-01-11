@@ -42,6 +42,7 @@ class GrafoApp:
             ("Distância e Caminho Mínimo", self.caminho_minimo),
             ("Executar Algoritmo de Prim", self.prim),
             ("Centralidade de Proximidade", self.centralidade_proximidade),	
+            ("Emparelhamento Máximo", self.emparelhamento_maximo),
             ("Sair", self.sair)
         ]
 
@@ -228,6 +229,10 @@ class GrafoApp:
             self.exibir_resultado("Erro: O vértice deve ser um número inteiro.")
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular a centralidade de proximidade: {str(e)}")
+
+    def emparelhamento_maximo(self):
+        emparelhamento = self.grafo.emparelhamento_edmonds();
+        self.exibir_resultado(f"Emparelhamento Máximo: {emparelhamento}")
 
     def sair(self):
         self.master.destroy()
