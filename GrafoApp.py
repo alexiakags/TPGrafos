@@ -41,6 +41,7 @@ class GrafoApp:
             ("Detectar ciclo", self.detectar_ciclo),
             ("Distância e Caminho Mínimo", self.caminho_minimo),
             ("Executar Algoritmo de Prim", self.prim),
+            ("Emparelhamento Máximo", self.emparelhamento),
             ("Sair", self.sair)
         ]
 
@@ -213,6 +214,10 @@ class GrafoApp:
             self.exibir_resultado("Erro: O vértice inicial deve ser um número inteiro.")
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular a árvore geradora mínima: {str(e)}")
+
+    def emparelhamento(self):
+        emparelhamento = self.grafo.emparelhamento_edmonds()
+        self.exibir_resultado(f"Emparelhamento máximo: {emparelhamento}")
 
     def sair(self):
         self.master.destroy()

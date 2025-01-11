@@ -1,3 +1,5 @@
+from collections import deque
+
 class Grafo:
 
     def __init__(self, num_vertices):
@@ -372,3 +374,33 @@ class Grafo:
             return None
 
         return mst, custo_total
+
+    #Necessário converter a matriz de adjacência para dicionário, utilizado no algoritmo de Edmonds
+    def matriz_para_lista(self):
+        grafo = {i + 1: [] for i in range(self.num_vertices)}  # Cria o dicionário vazio
+        for i in range(self.num_vertices):
+            for j in range(self.num_vertices):
+                if self.matriz_adj[i][j] != 0:  # Considera apenas conexões com peso diferente de 0
+                    grafo[i + 1].append(j + 1)  # Adiciona o vizinho à lista
+        return grafo
+    
+    def emparelhamento_edmonds(self):
+        grafo = self.matriz_para_lista()
+        def dfs(v, visitados, emparelhamento):
+            for u in grafo[v]:
+                if not visitados[u]:
+                    visitados[u] = True
+                    if u not in emparelhamento or dfs(emparelhamento[u], visitados, emparelhamento):
+                        emparelhamento[u] = v
+                        emparelhamento[v] = u
+                        return True
+            return False
+
+        emparelhamento = {}
+        for v in range(1, self.num_vertices + 1):
+            if v not in emparelhamento:
+                visitados = [False] * (self.num_vertices + 1)
+                dfs(v, visitados, emparelhamento)
+
+        emparelhamento_resultado = [(v, emparelhamento[v]) for v in emparelhamento if v < emparelhamento[v]]
+        return emparelhamento_resultado
