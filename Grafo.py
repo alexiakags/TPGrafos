@@ -251,6 +251,38 @@ class Grafo:
         return componentes
 
 
+    # PARTE 2
+    # TODO 1 - Centralidade de Proximidade: Implementar o cálculo da centralidade de proximidade para um vértice, 
+    # usando fórmulas baseadas na soma das distâncias mínimas para outros vértices.
+
+    # TODO 2 - Garantir que a funcionalidade lida com grafos desconexos e diferentes tipos de pesos.
+    def centralidade_proximidade(self, vertice):
+        # Calcula as distâncias e verifica se há ciclo negativo
+        if not self.bellman_ford(vertice):
+            return 0.0  # Retorna 0 se houver um ciclo negativo
+        
+        # Verificar as distâncias calculadas após Bellman-Ford
+        print(f"Distâncias após Bellman-Ford para o vértice {vertice}: {self.distancias}")
+        
+        # Filtra apenas as distâncias finitas (alcançáveis) e diferentes de 0 (não considerar a distância para o próprio vértice)
+        distancias_validas = [d for d in self.distancias if d != float('inf') and d != 0]
+
+        # Número de vértices alcançáveis
+        num_alcancaveis = len(distancias_validas)
+
+        # Se não houver vértices alcançáveis, retorna 0
+        if num_alcancaveis == 0:
+            return 0.0
+
+        soma_distancias = sum(distancias_validas)
+
+        # Retorna a centralidade de proximidade
+        return num_alcancaveis / soma_distancias
+
+
+
+
+
 
     def menu(self):
         while True:
@@ -268,6 +300,8 @@ class Grafo:
             print("9. Verificar se o grafo possui ciclo")
             print("10. Determinar distância e caminho mínimo")
             print("11. Executar Algoritmo de Prim")
+            print("12. Centralidade de Proximidade")
+            print("13. Emparelhamento Máximo")
             print("0. Sair")
             print("="*40)
             opcao = input("Escolha uma opção: ")
@@ -299,7 +333,7 @@ class Grafo:
             elif opcao == "9":
                 print(f"Ciclo presente no grafo: {'Sim' if self.detectar_ciclo() else 'Não'}")
             elif opcao == "10":
-                 # Distância e Caminho Mínimo
+                # Distância e Caminho Mínimo
                 origem = 1  # Vértice inicial para o cálculo de caminhos mínimos
                 print("Digite a origem: ")
                 origem = int(input())
@@ -330,6 +364,17 @@ class Grafo:
                         arquivo.write(f"Peso total: {custo_total:.1f}")
 
                     print(f"A árvore geradora mínima foi salva em '{nome_arquivo}'.")
+            
+            elif opcao == "12":
+                vertice = int(input("Digite o vértice para calcular a centralidade de proximidade: "))
+                centralidade = self.centralidade_proximidade(vertice)
+                print(f"Centralidade de proximidade do vértice {vertice}: {centralidade:.4f}")
+
+            elif opcao == "13":
+                emparelhamento = self.emparelhamento_edmonds()
+                print("Emparelhamento máximo:")
+                for u, v in emparelhamento:
+                    print(f"{u} -> {v}")
 
             elif opcao == "0":
                 print("Saindo do programa...")
@@ -375,7 +420,6 @@ class Grafo:
 
         return mst, custo_total
 
-    #Necessário converter a matriz de adjacência para dicionário, utilizado no algoritmo de Edmonds
     def matriz_para_lista(self):
         grafo = {i + 1: [] for i in range(self.num_vertices)}  # Cria o dicionário vazio
         for i in range(self.num_vertices):
