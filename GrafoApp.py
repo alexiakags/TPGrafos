@@ -41,8 +41,9 @@ class GrafoApp:
             ("Detectar ciclo", self.detectar_ciclo),
             ("Distância e Caminho Mínimo", self.caminho_minimo),
             ("Executar Algoritmo de Prim", self.prim),
-            ("Centralidade de Proximidade", self.centralidade_proximidade),	
+            ("Cobertura Mínima de Vértices", self.cobertura_minima_vertices),	
             ("Emparelhamento Máximo", self.emparelhamento_maximo),
+            ("Centralidade de Proximidade", self.centralidade_proximidade),
             ("Sair", self.sair)
         ]
 
@@ -216,9 +217,9 @@ class GrafoApp:
         except Exception as e:
             self.exibir_resultado(f"Erro ao calcular a árvore geradora mínima: {str(e)}")
 
-    def centralidade_proximidade(self):
-        self.instruction_label.config(text="Digite o vértice para calcular a centralidade de proximidade:")
-        self.input_action = self._calcular_centralidade_proximidade
+    def cobertura_minima_vertices(self):
+        cobertura = self.grafo.cobertura_minima_vertices()
+        self.exibir_resultado(f"Cobertura Mínima de Vértices: {cobertura}")
 
     def _calcular_centralidade_proximidade(self, vertice):
         try:
@@ -233,6 +234,10 @@ class GrafoApp:
     def emparelhamento_maximo(self):
         emparelhamento = self.grafo.emparelhamento_edmonds();
         self.exibir_resultado(f"Emparelhamento Máximo: {emparelhamento}")
+
+    def centralidade_proximidade(self):
+        self.instruction_label.config(text="Digite o vértice para calcular a centralidade de proximidade:")
+        self.input_action = self._calcular_centralidade_proximidade
 
     def sair(self):
         self.master.destroy()
